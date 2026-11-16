@@ -1,6 +1,6 @@
 # Redis Chat Application (Backend)
 
-A RESTful Chat Application backend built using Spring Boot and Redis.
+A RESTful Chat Application backend built using Spring Boot and Redis. 
 This project implements chat rooms, user joining, messaging, and real-time message
 broadcasting using Redis Pub/Sub as per the provided assignment requirements.
 
@@ -29,6 +29,8 @@ The application requires a local Redis server running on the default port 6379. 
 docker run --name my-redis -p 6379:6379 -d redis
 
 ### 2. Run the Spring Boot Application
+*(Note for Linux/Mac users: If you get a permission denied error for maven wrapper, make it executable first by running: `chmod +x mvnw`)*
+
 You can run the project using your IDE by executing RedischatApplication.java, or via Maven in the terminal:
 ./mvnw spring-boot:run
 The application will start on http://localhost:8080.

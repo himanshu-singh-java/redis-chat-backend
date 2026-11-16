@@ -12,7 +12,7 @@ public class ChatMapper {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setParticipant(messageRequest.getParticipant());
         chatMessage.setMessage(messageRequest.getMessage());
-        chatMessage.setTimeStamp(Instant.now().toString());
+        chatMessage.setTimestamp(Instant.now().toString());
         return chatMessage;
     }
 }

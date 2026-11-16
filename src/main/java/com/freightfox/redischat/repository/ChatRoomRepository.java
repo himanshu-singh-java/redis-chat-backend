@@ -20,8 +20,13 @@ public class ChatRoomRepository {
         this.redisTemplate = redisTemplate;
     }
 
-    public void createRoom(String roomId){
-        redisTemplate.opsForHash().put(ROOM_METADATA_KEY, roomId, Instant.now().toString());
+    public boolean createRoomAutomatically(String roomId){
+        return Boolean.TRUE.equals(redisTemplate.opsForHash().putIfAbsent(ROOM_METADATA_KEY, roomId, roomId));
+    }
+
+    public boolean isParticipant(String roomId, String participant){
+        String participantKey = String.format(PARTICIPANTS_KEY_PREFIX, roomId);
+        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(participantKey, participant));
     }
 
     public Boolean roomExists(String roomId){

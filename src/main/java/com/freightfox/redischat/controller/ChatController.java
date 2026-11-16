@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chatapp/chatrooms")
@@ -23,31 +24,41 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<String>> createRoom(@Valid @RequestBody RoomRequest request){
+    public ResponseEntity<?> createRoom(@Valid @RequestBody RoomRequest request){
         chatRoomService.createRoom(request.getRoomName());
-        return ResponseEntity.ok(ApiResponse.success("Room created successfully", request.getRoomName(), null));
+        return ResponseEntity.ok(Map.of(
+                "message", "Chat room '" + request.getRoomName() + "' created successfully.",
+                "roomId", request.getRoomName(),
+                "status", "success"
+        ));
     }
 
     @PostMapping("/{roomId}/join")
-    public ResponseEntity<ApiResponse<String>> joinRoom(@PathVariable String roomId,
+    public ResponseEntity<?> joinRoom(@PathVariable String roomId,
                                                         @Valid @RequestBody JoinRequest joinRequest
                                                         ){
         chatRoomService.joinRoom(roomId, joinRequest.getParticipant());
-        return ResponseEntity.ok(ApiResponse.success(joinRequest.getParticipant() + " joined the room", roomId, null));
+        return ResponseEntity.ok(Map.of(
+                "message", "User '" + joinRequest.getParticipant() + "' joined chat room '" + roomId + "'.",
+                "status", "success"
+        ));
     }
 
     @PostMapping("/{roomId}/messages")
-    public ResponseEntity<ApiResponse<String>> sendMessage(@PathVariable String roomId,
-                                                           @Valid @RequestBody MessageRequest request){
+    public ResponseEntity<?> sendMessage(@PathVariable String roomId,
+                                         @Valid @RequestBody MessageRequest request){
         chatRoomService.sendMessage(roomId, request);
-        return ResponseEntity.ok(ApiResponse.success("Message sent successfully", roomId, null));
+        return ResponseEntity.ok(Map.of(
+                "message", "Message sent successfully.",
+                "status", "success"
+        ));
     }
 
     @GetMapping("/{roomId}/messages")
-    public ResponseEntity<ApiResponse<List<ChatMessage>>> getMessages(@PathVariable String roomId,
-                                                           @RequestParam(defaultValue = "50") long limit){
+    public ResponseEntity<?> getMessages(@PathVariable String roomId,
+                                         @RequestParam(defaultValue = "50") long limit){
         List<ChatMessage> messages = chatRoomService.getMessages(roomId, limit);
-        return ResponseEntity.ok(ApiResponse.success("Chat history fetched", roomId, messages));
+        return ResponseEntity.ok(Map.of("messages", messages));
     }
 
 }

@@ -8,7 +8,6 @@ import com.freightfox.redischat.pubsub.RedisMessagePublisher;
 import com.freightfox.redischat.repository.ChatRoomRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +27,12 @@ public class ChatRoomService {
     }
 
     public void createRoom(String roomId){
-        if(chatRoomRepository.roomExists(roomId)){
+
+        boolean created = chatRoomRepository.createRoomAutomatically(roomId);
+
+        if(!created){
             throw new ChatException("Room already Exists");
         }
-
-        chatRoomRepository.createRoom(roomId);
     }
 
     public void joinRoom(String roomId, String participant) {
@@ -49,8 +49,11 @@ public class ChatRoomService {
             throw new ChatException("Room does not exist!");
         }
 
-        ChatMessage message = chatMapper.toChatMessage(request);
+        if(!chatRoomRepository.isParticipant(roomId, request.getParticipant())){
+            throw new ChatException("User '" + request.getParticipant() + "' has not joined the room.");
+        }
 
+        ChatMessage message = chatMapper.toChatMessage(request);
         chatRoomRepository.saveMessage(roomId, message);
         redisMessagePublisher.publish(roomId, message);
     }
@@ -58,6 +61,10 @@ public class ChatRoomService {
     public List<ChatMessage> getMessages(String roomId, long limit){
         if(!chatRoomRepository.roomExists(roomId)){
             throw new ChatException("Room does not exist!");
+        }
+
+        if(limit <= 0){
+            limit = 10;
         }
 
         List<Object> messages = chatRoomRepository.getMessages(roomId, limit);

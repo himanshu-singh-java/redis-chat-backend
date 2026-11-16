@@ -38,18 +38,18 @@ public class ChatRoomServiceTest {
     void testCreateRoom_Success(){
         String roomId = "SafarX-Room";
 
-        when(chatRoomRepository.roomExists(roomId)).thenReturn(false);
+        when(chatRoomRepository.createRoomAutomatically(roomId)).thenReturn(true);
 
         chatRoomService.createRoom(roomId);
 
-        verify(chatRoomRepository, times(1)).createRoom(roomId);
+        verify(chatRoomRepository, times(1)).createRoomAutomatically(roomId);
     }
 
     @Test
     void testCreateRoom_AlreadyExists_ThrowException(){
         String roomId = "SafarX-Room";
 
-        when(chatRoomRepository.roomExists(roomId)).thenReturn(true);
+        when(chatRoomRepository.createRoomAutomatically(roomId)).thenReturn(false);
 
         ChatException chatException = assertThrows(ChatException.class, ()->{
             chatRoomService.createRoom(roomId);
@@ -57,7 +57,7 @@ public class ChatRoomServiceTest {
 
         assertEquals("Room already Exists", chatException.getMessage());
 
-        verify(chatRoomRepository, never()).createRoom(roomId);
+        verify(chatRoomRepository, times(1)).createRoomAutomatically(roomId);
     }
 
     @Test
@@ -97,6 +97,8 @@ public class ChatRoomServiceTest {
         ChatMessage dummyMessage = new ChatMessage("Himanshu", "Hello Testing", Instant.now().toString());
 
         when(chatRoomRepository.roomExists(roomId)).thenReturn(true);
+
+        when(chatRoomRepository.isParticipant(roomId, messageRequest.getParticipant())).thenReturn(true);
 
         when(chatMapper.toChatMessage(any(MessageRequest.class))).thenReturn(dummyMessage);
 
