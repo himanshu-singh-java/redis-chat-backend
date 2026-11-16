@@ -128,4 +128,64 @@ public class ChatRoomServiceTest {
         assertEquals("Alok", result.get(0).getParticipant());
         verify(chatRoomRepository, times(1)).getMessages(roomId, limit);
     }
+
+    @Test
+    void testSendMessage_UserNotMember_ThrowException(){
+        String roomId = "SafarX-Room";
+        MessageRequest messageRequest = new MessageRequest();
+        messageRequest.setParticipant("Stranger");
+        messageRequest.setMessage("Hello");
+
+        when(chatRoomRepository.roomExists(roomId)).thenReturn(true);
+        when(chatRoomRepository.isParticipant(roomId, "Stranger")).thenReturn(false);
+
+        ChatException exception = assertThrows(ChatException.class, () -> {
+            chatRoomService.sendMessage(roomId, messageRequest);
+        });
+
+        assertEquals("User 'Stranger' has not joined the room.", exception.getMessage());
+        verify(chatRoomRepository, never()).saveMessage(anyString(), any());
+    }
+
+    @Test
+    void testSendMessage_RoomDoesNotExist_ThrowException(){
+        String roomId = "NonExistentRoom";
+        MessageRequest messageRequest = new MessageRequest();
+        messageRequest.setParticipant("Himanshu");
+        messageRequest.setMessage("Hello");
+
+        when(chatRoomRepository.roomExists(roomId)).thenReturn(false);
+
+        ChatException exception = assertThrows(ChatException.class, () -> {
+            chatRoomService.sendMessage(roomId, messageRequest);
+        });
+
+        assertEquals("Room does not exist!", exception.getMessage());
+        verify(chatRoomRepository, never()).saveMessage(anyString(), any());
+    }
+
+    @Test
+    void testGetMessages_ZeroLimit_DefaultsTo10(){
+        String roomId = "SafarX-Room";
+        long zeroLimit = 0;
+
+        when(chatRoomRepository.roomExists(roomId)).thenReturn(true);
+        when(chatRoomRepository.getMessages(roomId, 10)).thenReturn(List.of());
+
+        chatRoomService.getMessages(roomId, zeroLimit);
+
+        verify(chatRoomRepository, times(1)).getMessages(roomId, 10);
+    }
+
+    @Test
+    void testGetMessages_NegativeLimit_DefaultsTo10(){
+        String roomId = "SafarX-Room";
+        long negativeLimit = -5;
+
+        when(chatRoomRepository.roomExists(roomId)).thenReturn(true);
+        when(chatRoomRepository.getMessages(roomId, 10)).thenReturn(List.of());
+
+        chatRoomService.getMessages(roomId, negativeLimit);
+        verify(chatRoomRepository, times(1)).getMessages(roomId, 10);
+    }
 }
