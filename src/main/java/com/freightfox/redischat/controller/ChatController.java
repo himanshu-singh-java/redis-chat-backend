@@ -1,12 +1,11 @@
 package com.freightfox.redischat.controller;
-
-import com.freightfox.redischat.dto.ApiResponse;
 import com.freightfox.redischat.dto.JoinRequest;
 import com.freightfox.redischat.dto.MessageRequest;
 import com.freightfox.redischat.dto.RoomRequest;
 import com.freightfox.redischat.model.ChatMessage;
 import com.freightfox.redischat.service.ChatRoomService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public class ChatController {
     @PostMapping
     public ResponseEntity<?> createRoom(@Valid @RequestBody RoomRequest request){
         chatRoomService.createRoom(request.getRoomName());
-        return ResponseEntity.ok(Map.of(
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "message", "Chat room '" + request.getRoomName() + "' created successfully.",
                 "roomId", request.getRoomName(),
                 "status", "success"
@@ -56,7 +55,7 @@ public class ChatController {
 
     @GetMapping("/{roomId}/messages")
     public ResponseEntity<?> getMessages(@PathVariable String roomId,
-                                         @RequestParam(defaultValue = "50") long limit){
+                                         @RequestParam(defaultValue = "10") long limit){
         List<ChatMessage> messages = chatRoomService.getMessages(roomId, limit);
         return ResponseEntity.ok(Map.of("messages", messages));
     }

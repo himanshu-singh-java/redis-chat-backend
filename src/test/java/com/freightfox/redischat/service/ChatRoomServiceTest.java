@@ -116,7 +116,7 @@ public class ChatRoomServiceTest {
         ChatMessage msg1 = new ChatMessage("Alok", "Hi", Instant.now().toString());
         ChatMessage msg2 = new ChatMessage("Himanshu", "Hello", Instant.now().toString());
 
-        List<Object> mockMessages = List.of(msg1, msg2);
+        List<ChatMessage> mockMessages = List.of(msg1, msg2);
 
         when(chatRoomRepository.roomExists(roomId)).thenReturn(true);
 
@@ -170,7 +170,7 @@ public class ChatRoomServiceTest {
         long zeroLimit = 0;
 
         when(chatRoomRepository.roomExists(roomId)).thenReturn(true);
-        when(chatRoomRepository.getMessages(roomId, 10)).thenReturn(List.of());
+        when(chatRoomRepository.getMessages(roomId, 10)).thenReturn(List.<ChatMessage>of());
 
         chatRoomService.getMessages(roomId, zeroLimit);
 
@@ -183,7 +183,7 @@ public class ChatRoomServiceTest {
         long negativeLimit = -5;
 
         when(chatRoomRepository.roomExists(roomId)).thenReturn(true);
-        when(chatRoomRepository.getMessages(roomId, 10)).thenReturn(List.of());
+        when(chatRoomRepository.getMessages(roomId, 10)).thenReturn(List.<ChatMessage>of());
 
         chatRoomService.getMessages(roomId, negativeLimit);
         verify(chatRoomRepository, times(1)).getMessages(roomId, 10);

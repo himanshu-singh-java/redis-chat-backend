@@ -9,7 +9,6 @@ import com.freightfox.redischat.repository.ChatRoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ChatRoomService {
@@ -66,8 +65,10 @@ public class ChatRoomService {
         if(limit <= 0){
             limit = 10;
         }
+        else if (limit > 100) {
+            limit = 100;
+        }
 
-        List<Object> messages = chatRoomRepository.getMessages(roomId, limit);
-        return messages.stream().map(msg -> (ChatMessage) msg).collect(Collectors.toList());
+        return chatRoomRepository.getMessages(roomId, limit);
     }
 }
