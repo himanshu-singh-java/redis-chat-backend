@@ -1,10 +1,11 @@
 # Simple Chat Application Using Redis
 
-> Important Links for Evaluator:
-> Presentation Video: [Watch Demo Video](https://www.loom.com/share/0f806423e5b8475ca15d3fe3f3cff48e)
-> Live API Documentation (Swagger UI): [Swagger UI Link](https://redis-chat-backend-production.up.railway.app/swagger-ui/index.html)
-> **Live Base API URL: `https://redis-chat-backend-production.up.railway.app`
-    > (Note: The root URL correctly returns a 404/Unknown Endpoint JSON response by design. Please use the Swagger UI link above to test endpoints).
+> **🎯 Important Links for Evaluator:**
+> - 🎥 **Presentation Video:** [Watch Demo Video on Loom](https://www.loom.com/share/0f806423e5b8475ca15d3fe3f3cff48e)
+> - 🌐 **Live API Documentation (Swagger UI):** [Swagger UI Link](https://redis-chat-backend-production.up.railway.app/swagger-ui/index.html)
+> - 🚀 **Live Base API URL:** `https://redis-chat-backend-production.up.railway.app`
+>
+> *(Note: The root URL correctly returns a 404/Unknown Endpoint JSON response by design. Please use the Swagger UI link above to test endpoints).*
 
 A backend-only chat room application built with Java 21, Spring Boot, and Redis. It provides REST APIs to create chat rooms, join rooms, send messages, and retrieve recent chat history.
 
