@@ -1,5 +1,11 @@
 # Simple Chat Application Using Redis
 
+> Important Links for Evaluator:
+> Presentation Video: [Watch Demo Video](https://drive.google.com/file/d/1zdhO6w8tknuY-igHxsL70RmShvXktfEl/view?usp=sharing)
+> Live API Documentation (Swagger UI): [Swagger UI Link](https://redis-chat-backend-production.up.railway.app/swagger-ui/index.html)
+> **Live Base API URL: `https://redis-chat-backend-production.up.railway.app`
+    > (Note: The root URL correctly returns a 404/Unknown Endpoint JSON response by design. Please use the Swagger UI link above to test endpoints).
+
 A backend-only chat room application built with Java 21, Spring Boot, and Redis. It provides REST APIs to create chat rooms, join rooms, send messages, and retrieve recent chat history.
 
 The implementation follows the assignment scope: REST APIs, Redis as the primary data store and message broker, and Postman-based testing. No frontend UI or WebSocket/SSE endpoint is included.
@@ -120,11 +126,8 @@ http://localhost:8080
 
 ## REST API reference
 
-Base URL:
-
-```text
-http://localhost:8080
-```
+**Live Base URL:** `https://redis-chat-backend-production.up.railway.app`
+**Local Base URL:** `http://localhost:8080`
 
 Base path:
 
@@ -162,7 +165,7 @@ Room names must be non-blank, contain no more than 50 characters, and use letter
 
 **POST** `/api/chatapp/chatrooms/{roomId}/join`
 
-Example URL:
+Example Local URL:
 
 ```text
 POST http://localhost:8080/api/chatapp/chatrooms/general/join
@@ -193,7 +196,7 @@ The room must exist before a participant can join it. Participant names must be 
 
 **POST** `/api/chatapp/chatrooms/{roomId}/messages`
 
-Example URL:
+Example Local URL:
 
 ```text
 POST http://localhost:8080/api/chatapp/chatrooms/general/messages
@@ -225,7 +228,7 @@ The room must exist and the participant must already be a member of that room. M
 
 **GET** `/api/chatapp/chatrooms/{roomId}/messages?limit=10`
 
-Example URL:
+Example Local URL:
 
 ```text
 GET http://localhost:8080/api/chatapp/chatrooms/general/messages?limit=10
@@ -303,13 +306,12 @@ docker exec -it my-redis redis-cli LRANGE "chatroom:general:messages" 0 -1
 
 ## API documentation
 
-With the application running, open Swagger UI:
+The OpenAPI JSON document and Swagger UI are available at:
 
-```text
-http://localhost:8080/swagger-ui/index.html
-```
+- **Live Swagger UI:** [https://redis-chat-backend-production.up.railway.app/swagger-ui/index.html](https://redis-chat-backend-production.up.railway.app/swagger-ui/index.html)
+- **Local Swagger UI:** `http://localhost:8080/swagger-ui/index.html`
 
-The OpenAPI JSON document is available at:
+The local OpenAPI JSON document is available at:
 
 ```text
 http://localhost:8080/v3/api-docs
